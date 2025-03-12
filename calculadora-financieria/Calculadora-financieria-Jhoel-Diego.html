@@ -16,60 +16,64 @@
         </div>
         <div style="background-color: white;">
             <!-- a plantação de morango é -->
-            Informe a quantidade de hectares de morangos usadas durante nessa safra*: <br><input id="ipt_quantidade_hectares"><br><br>
-            Infome a quantidade de mudas de morango cultivadas durante uma safra[Kg]*: <br><input id="ipt_quantidade_morangos"><br><br>
-            inForme a duração aproximada dessa safra:
-            Infome o valor que você vende o morango po quilo[R$]*: <br><input id="ipt_valor_morango"><br><br>
-            Informe o gasto com insumos(adubo, fertilizantes, defensivos agrículas)*: <br> <input id="ipt_insumos"><br><br>
-            Informe o gasto com mão de obra[mensal]*: <br><input id="ipt_mao_obra"><br><br>
-            Informe o gasto com àgua com irrigação em sua plantação[mensal]*: <br><input id="ipt_valor_agua"><br><br>
-            Informe o gasto com equipamentos mensal [manutenção/aluguel]*: <br><input id="ipt_manutencao"> <br><br>
-            Informe o gasto com outros custos operacionais*: <br><input id="ipt_adicionais"><br><br>
-            <div> <button onclick="calcular_receita_lucro()" style=" background-color: rgb(158, 21, 21);color: white;" >CALCULAR RECEITA TOTAL ESTIMADO</button></div>
+            Informe a quantidade de canteiros a serem usadas nessa safra*: <br><input id="ipt_quant_canteiros" placeholder="Ex: 40"><br><br>
+            Informe a largura desse canteiro[m]*:<br><input id="ipt_larg_canteiro" placeholder="Ex: 1"><br><br>
+            Informe o comprimento desse canteiro[m]*:<br><input id="ipt_comp_canteiro" placeholder="Ex: 50"><br><br>
+            Infome a quantidade de mudas de morango plantadas por canteiro*: <br><input id="ipt_quant_mudas" placeholder="Ex: 833"><br><br>
+            inForme a duração aproximada dessa safra [dias]: <br> <input id="ipt_duracao_safra" placeholder="Ex: 60"><br><br>
+            Infome o valor que você vende o morango por quilo[R$]*: <br><input id="ipt_preco_morango" placeholder="Ex: 15"><br><br>
+            Informe o gasto com insumos(adubo, fertilizantes, defensivos agrículas)[mensal]*: <br> <input id="ipt_insumos" placeholder="Ex: 100"><br><br>
+            Informe o gasto com mão de obra[mensal]*: <br><input id="ipt_mao_obra" placeholder="Ex: 2000"><br><br>
+            Informe o gasto com àgua com irrigação em sua plantação[mensal]*: <br><input id="ipt_agua" placeholder="Ex: 200"><br><br>
+            Informe o gasto com equipamentos mensal [manutenção/aluguel]*: <br><input id="ipt_equipamentos" placeholder="Ex: 500"> <br><br>
+            Informe o gasto com outros custos operacionais*: <br><input id="ipt_adicionais" placeholder="Ex: 100"><br><br>
+            <div> <button onclick="calcular_receita_lucro()" >CALCULAR RECEITA E LUCRO TOTAL ESTIMADOS</button></div>
         </div>
-        <div id="texto"></div>
+        <div id="texto_tela"></div>
 </body>
 </html>
 <script>
-    var quantidade_hectares = 0
-    var quantidade_morangos = 0
-    var preco_morango = 0
-    var receita_com_sensores_safra = 0
-    var receita_estresse_hidrico = 0
-    var receita_encharcamento = 0
-    function prencher_variaveis_globais() {
-        quantidade_hectares = ipt_quantidade_hectares.value;
-        quantidade_morangos = ipt_quantidade_morangos.value;
-        preco_morango = ipt_valor_morango.value;
-        receita_com_sensores_safra = quantidade_morangos * quantidade_hectares* 1000 * preco_morango; 
-        receita_estresse_hidrico = receita_com_sensores_safra * 0.7
-        receita_encharcamento = receita_com_sensores_safra * 0.75
-    }
+
     function calcular_receita_lucro() {
-        prencher_variaveis_globais()
-        var insumos = Number(ipt_insumos.value)
-        var mao_de_obra = Number(ipt_mao_obra.value)
-        var gasto_agua = Number(ipt_valor_agua.value)
-        var manutencao = Number(ipt_manutencao.value)
-        var adicionais =  Number(ipt_adicionais.value)
-        var total_gasto = insumos + mao_de_obra + gasto_agua + manutencao + adicionais
-        texto.innerHTML  = `
-        ____________________________________________________________________________________<br>
-        <span style="color: red"><b>SEM USAR O NOSSA GESTÃO DE MONITORAMNETO DA UMIDADE DO SOLO CAPACITIVO: </b><br><br>
+        // adicionando variaveis locais para armazenar as respostas do usuario utilizando  o number para identificarlo como numero
+        var quantidade_canteiros = Number(ipt_quant_canteiros.value);
+        var largura_canteiro = Number(ipt_larg_canteiro.value);
+        var comprimento_canteiro = Number(ipt_comp_canteiro.value)
+        var quantidade_mudas = Number(ipt_quant_mudas.value);
+        var duracao_safra = Number(ipt_duracao_safra.value);
+        var preco_morango = Number(ipt_preco_morango.value);
+        var insumos = Number(ipt_insumos.value);
+        var mao_de_obra = Number(ipt_mao_obra.value);
+        var gasto_agua = Number(ipt_agua.value);
+        var equipamentos = Number(ipt_equipamentos.value);
+        var adicionais =  Number(ipt_adicionais.value);
+        // variaveis para armazenar o resultado dos calculos a serem feitos
+        var mudas_recomendadas = comprimento_canteiro * largura_canteiro / (0.2 * 0.3);
+        var valor_plantado = quantidade_mudas * 0.49 * quantidade_canteiros * preco_morango
+        var valor_plantado_recomendado = mudas_recomendadas * 0.49 * quantidade_canteiros * preco_morango
+        var duracao_safra_mensal = duracao_safra / 31 
+        var total_despesas= (insumos *duracao_safra_mensal)+ (mao_de_obra * duracao_safra_mensal) + (gasto_agua * duracao_safra_mensal) + equipamentos + adicionais
+        var faturamento_estresse_hidrico = valor_plantado * 0.7
+        var faturamento_sensor_estresse = valor_plantado * 0.85
+        var faturamento_encharcamento = valor_plantado * 0.75
+        var faturamento_sensor_encharcamento = valor_plantado * 0.90
+        var economia_agua = gasto_agua * 0.2
+        texto_tela.innerHTML  = `<span style="color: red"><b>SEM USAR O NOSSA GESTÃO DE MONITORAMNETO DA UMIDADE DO SOLO CAPACITIVO: </b><br><br>
         <b>CASO A SAFRA SOFRA DE ESTRESSE HIDRICO: </b><br><br>
-        Estimativa de receita: R$${receita_estresse_hidrico}<br>
-        Perda monetaria: R$${receita_com_sensores_safra - receita_estresse_hidrico}<br>
-        lucro estimado: R$${receita_estresse_hidrico - total_gasto}<br><br>
+        Estimativa de faturamento: R$${faturamento_estresse_hidrico}<br>
+        lucro estimado: R$${faturamento_estresse_hidrico - total_despesas}<br><br>
+        Perda monetaria: R$${valor_plantado - faturamento_estresse_hidrico}<br>
         <b>CASO O CULTIVO SOFRA DE ENCHARCAMENTO:</b><br><br>
-        Estimativa de receita: R$${receita_encharcamento}<br>
-        Perda monetaria: R$${receita_com_sensores_safra - receita_encharcamento}<br>
-        Lucro estimado: R$${receita_encharcamento - total_gasto}</span><br>
-       _____________________________________________________________________________________<br>
+        Estimativa de faturamento: R$${faturamento_encharcamento}<br>
+        Lucro estimado: R$${faturamento_encharcamento - total_despesas}</span><br>
+        Perda monetaria: R$${valor_plantado - faturamento_encharcamento}<br>
         <span style="color: green"><b>COM O NOSSA GESTÃO DE MONITORAMENTO DA UMIDADE DO SOLO CAPACITIVO:</b> <br><br>
-        Estimativa de receita: R$${receita_com_sensores_safra}<br>
-        Economia com a agua: R$${gasto_agua * 0.2}<br>
-        Lucro estimado: R$${total_gasto - gasto_agua * 0.2}<br>
-        Redução de perdas: R$${receita_com_sensores_safra - receita_estresse_hidrico} até R$${receita_com_sensores_safra - receita_encharcamento} </span>`
+        Estimativa de faturamento: R$${faturamento_sensor_encharcamento} até R$${faturamento_sensor_estresse}<br>
+        Economia com a agua: R$${economia_agua}<br>
+        Lucro estimado: R$${faturamento_sensor_encharcamento - total_despesas - economia_agua} até R$${faturamento_sensor_estresse - total_despesas}<br>
+        diferença na faturamento: R$${faturamento_sensor_encharcamento - faturamento_encharcamento } até R$${faturamento_sensor_estresse - faturamento_estresse_hidrico} </span>
+        diferença no lucro: R$${(faturamento_sensor_encharcamento - total_despesas - economia_agua)-(faturamento_encharcamento - total_despesas)} até R$${(faturamento_sensor_estresse - total_despesas)-(faturamento_estresse_hidrico - total_despesas)}
+        `
         
         }
 </script>
