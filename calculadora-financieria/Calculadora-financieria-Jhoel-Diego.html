@@ -6,16 +6,15 @@
     <title>Calculadora Financiera</title>
 </head>
 <body >
-    <img src="https://i.imgur.com/skxvtQl.png" width="370" ><br><br>
+    <img src="file:///C:/Users/Pichau/Downloads/SmartBerry%20(8).png" width="370">
         <div>
             <h2><b style="color: rgb(158, 21, 21);">Simulador Financeiro</b></h2>
-            <p style="color: rgb(197, 76, 76); ">Bem-vindo ao Simulador Financeiro! Agora você pode visualizar como o uso de sensores
-                de umidade do solo <br> pode impactar diretamente as finanças do seu cultivo de morangos.
-                Vamos te guiar em uma simulação simples,<br> onde você pode inserir dados reais ou estimados 
+            <p style="color: rgb(197, 76, 76); ">Bem-vindo ao Simulador Financeiro! Agora você pode visualizar como o uso de sensores <br>
+                de umidade do solo pode impactar diretamente as finanças do seu cultivo de morangos.<br>
+                Vamos te guiar em uma simulação simples, onde você pode inserir dados reais ou estimados 
                 de sua propriedade.</p>
         </div>
         <div style="background-color: white;">
-            <!-- a plantação de morango é -->
             Informe a quantidade de canteiros a serem usadas nessa safra*: <br><input id="ipt_quant_canteiros" placeholder="Ex: 40"><br><br>
             Informe a largura desse canteiro[m]*:<br><input id="ipt_larg_canteiro" placeholder="Ex: 1"><br><br>
             Informe o comprimento desse canteiro[m]*:<br><input id="ipt_comp_canteiro" placeholder="Ex: 50"><br><br>
@@ -49,8 +48,8 @@
         var adicionais =  Number(ipt_adicionais.value);
         // variaveis para armazenar o resultado dos calculos a serem feitos
         var mudas_recomendadas = comprimento_canteiro * largura_canteiro / (0.2 * 0.3);
-        var valor_plantado = quantidade_mudas * 0.49 * quantidade_canteiros * preco_morango
-        var valor_plantado_recomendado = mudas_recomendadas * 0.49 * quantidade_canteiros * preco_morango
+        var valor_plantado = quantidade_mudas * 0.50 * quantidade_canteiros * preco_morango
+        var valor_plantado_recomendado = mudas_recomendadas * 0.50 * quantidade_canteiros * preco_morango
         var duracao_safra_mensal = duracao_safra / 31 
         var total_despesas= (insumos *duracao_safra_mensal)+ (mao_de_obra * duracao_safra_mensal) + (gasto_agua * duracao_safra_mensal) + equipamentos + adicionais
         var faturamento_estresse_hidrico = valor_plantado * 0.7
@@ -58,7 +57,33 @@
         var faturamento_encharcamento = valor_plantado * 0.75
         var faturamento_sensor_encharcamento = valor_plantado * 0.90
         var economia_agua = gasto_agua * 0.2
-        texto_tela.innerHTML  = `<span style="color: red"><b>SEM USAR O NOSSA GESTÃO DE MONITORAMNETO DA UMIDADE DO SOLO CAPACITIVO: </b><br><br>
+        var quantidade_sensores = 0
+        if (comprimento_canteiro * largura_canteiro / 2 <= 25) {
+            quantidade_sensores = 2
+        } else {
+            if (comprimento_canteiro * largura_canteiro / 2 > 25 &&  comprimento_canteiro * largura_canteiro / 3 <= 25) {
+                quantidade_sensores = 3
+            } else {
+                if (comprimento_canteiro * largura_canteiro / 3 > 25 &&  comprimento_canteiro * largura_canteiro / 4 <= 25) {
+                    quantidade_sensores = 4
+                } else {
+                    if (comprimento_canteiro * largura_canteiro / 4 > 25 &&  comprimento_canteiro * largura_canteiro / 5 <= 25) {
+                        quantidade_sensores = 5
+                    } else {
+                        if (comprimento_canteiro * largura_canteiro <= 0) {
+                            quantidade_sensores = 0
+                        } else {
+                            quantidade_sensores = 6
+                        }
+                    }
+                }
+            }
+        }
+        texto_tela.innerHTML  = `
+        Quantidade de mudas utilizadas para a area de ${comprimento_canteiro * largura_canteiro}m² foi de: ${quantidade_mudas}<br>
+        Quantidade de mudas utilizadas para a area de ${comprimento_canteiro * largura_canteiro}m² foi de: ${quantidade_mudas}
+        Quantidade de mudas recomendadas para a area de ${comprimento_canteiro * largura_canteiro}m² é de: ${mudas_recomendadas}<br>
+        <span style="color: red"><b>SEM USAR O NOSSA GESTÃO DE MONITORAMNETO DA UMIDADE DO SOLO CAPACITIVO: </b><br><br>
         <b>CASO A SAFRA SOFRA DE ESTRESSE HIDRICO: </b><br><br>
         Estimativa de faturamento: R$${faturamento_estresse_hidrico}<br>
         lucro estimado: R$${faturamento_estresse_hidrico - total_despesas}<br><br>
@@ -71,7 +96,7 @@
         Estimativa de faturamento: R$${faturamento_sensor_encharcamento} até R$${faturamento_sensor_estresse}<br>
         Economia com a agua: R$${economia_agua}<br>
         Lucro estimado: R$${faturamento_sensor_encharcamento - total_despesas - economia_agua} até R$${faturamento_sensor_estresse - total_despesas}<br>
-        diferença na faturamento: R$${faturamento_sensor_encharcamento - faturamento_encharcamento } até R$${faturamento_sensor_estresse - faturamento_estresse_hidrico} </span>
+        diferença na faturamento: R$${faturamento_sensor_encharcamento - faturamento_encharcamento } até R$${faturamento_sensor_estresse - faturamento_estresse_hidrico} </span><br>
         diferença no lucro: R$${(faturamento_sensor_encharcamento - total_despesas - economia_agua)-(faturamento_encharcamento - total_despesas)} até R$${(faturamento_sensor_estresse - total_despesas)-(faturamento_estresse_hidrico - total_despesas)}
         `
         
