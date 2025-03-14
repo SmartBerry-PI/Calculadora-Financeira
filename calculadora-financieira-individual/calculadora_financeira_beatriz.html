@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Financeira</title>
+</head>
+
+<body>
+    <h2> Simulador Financeiro</h2>
+
+    Bem-vindo ao Simulador Financeiro! Agora você pode visualizar como o uso de sensores
+    de umidade do solo pode impactar diretamente as finanças do seu cultivo de morangos.
+    Vamos te guiar em uma simulação simples, onde você pode inserir dados reais ou estimados de sua propriedade. <br> <br><br><br>
+
+Informe a quantidade de canteiros a serem usados nessa safra:
+<input id="qtd_canteiros"> <br>
+
+Informe a largura desse canteiro: [m]: 
+<input id="largura_canteiro"> <br>
+
+Informe o comprimento desse canteiro [m]:
+<input id="comprimento_canteiro"> <br>
+
+Informe a quantidade de mudas de morango plantadas por canteiro:
+<input id="qtd_mudas"> <br>
+
+Informe a duração aproximada dessa safra [dias]:
+<input id="duracao"> <br>
+
+Informe o valor que você vende o morango por quilo [R$]: 
+<input id="preco_morango"> <br>
+
+Informe os gastos com insumos ( ex: adubo, fertilizantes, defensivos agrícolas) [mensal]: 
+<input id="gasto_insumo"> <br>
+
+Informe o gasto com a mão de obra [mensal]: 
+<input id="gasto_mao_obra"> <br>
+
+Informe o gasto com água com irrigação em sua plantação [mensal]: 
+<input id="gasto_irrigacao"> <br>
+
+Informe o gasto com equipamentos(manutenção/aluguel) [mensal]: 
+<input id="gasto_equipamentos"> <br>
+
+Informe os gastos com outros custos adicionais:
+<input id="gasto_adicional"> <br> <br>
+
+<button onclick="calcular()">CALCULAR RECEITA E LUCRO TOTAL ESTIMADOS</button>
+
+<div id="txt_mostrar"></div>
+
+
+</body>
+<script>
+    function calcular() {
+
+        var ax_qtd_canteiro = Number (qtd_canteiros.value);
+        var ax_largura_canteiro = Number (largura_canteiro.value);
+        var ax_comprimento_canteiro = Number(comprimento_canteiro);
+        var ax_qtd_mudas = Number (qtd_mudas.value);
+        var ax_duracao = Number (duracao.value);
+        var ax_preco_morango = Number (preco_morango.value);
+        var ax_gasto_insumo = Number (gasto_insumo.value);
+        var ax_gasto_mao_obra = Number(gasto_mao_obra.value);
+        var ax_gasto_irrigacao = Number(gasto_irrigacao.value);
+        var ax_gasto_equipamentos = Number(gasto_equipamentos.value);
+        var ax_gasto_adicional = Number(gasto_adicional.value);
+    
+        var ax_preco_plantado = ax_qtd_mudas * 0.50 * ax_qtd_canteiro * ax_preco_morango;
+        var ax_mudas_recomendadas = ax_comprimento_canteiro * ax_largura_canteiro / (0.2 * 0.3); //comprimento recomendado referente ao documento
+        var duracao_safra = ax_duracao / 31; //duração da safra em um mês
+        var total_despesas = (ax_gasto_insumo * ax_duracao) + (ax_gasto_equipamentos * duracao_safra) + (ax_gasto_irrigacao * duracao_safra) + (ax_gasto_mao_obra *duracao_safra) + ax_gasto_adicional; //despesas mensais durante a safra
+        var faturamento_caso1 = ax_preco_plantado * 0.7 //sem sensor no caso 1
+        var faturamento_caso2 = ax_preco_plantado * 0.75; // sem o sensor no caso 2
+        var faturamento_sensor1 = ax_preco_plantado * 0.85; //com sersor (15% de 30)
+        var faturamento_sensor2 = ax_preco_plantado * 0.90;  //com sensor (10% de)
+        var economia_agua = ax_gasto_irrigacao * 0.2; //economia da água
+        var ax_qtd_sensores = 0;
+
+      
+    
+
+
+    
+        // cálculos para ver a quantidade de sensor necessária
+        if (ax_comprimento_canteiro * ax_largura_canteiro / 2 <= 25) {
+            ax_qtd_sensores = 2
+        } else {
+            if (ax_comprimento_canteiro * ax_largura_canteiro / 2 > 25 &&  ax_comprimento_canteiro * ax_largura_canteiro / 3 <= 25) {
+                ax_qtd_sensores = 3
+            } else {
+                if (ax_comprimento_canteiro * ax_largura_canteiro / 3 > 25 &&  ax_comprimento_canteiro * ax_largura_canteiro / 4 <= 25) {
+                    ax_qtd_sensores  = 4
+                } else {
+                    if (ax_comprimento_canteiro * ax_largura_canteiro / 4 > 25 &&  ax_comprimento_canteiro * ax_largura_canteiro / 5 <= 25) {
+                        ax_qtd_sensores  = 5
+                    } else {
+                        if (comprimento_canteiro * largura_canteiro <= 0) {
+                            ax_qtd_sensores = 0
+                        } else {
+                            ax_qtd_sensores  = 6
+                        }
+                    }
+                }
+            }
+        }
+        txt_mostrar.innerHTML  = 
+
+        `
+        <br> <br> SEM USAR A NOSSA GESTÃO DE MONITORAMNETO DA UMIDADE DO SOLO CAPACITIVO: <br><br>
+        CASO A SAFRA SOFRA DE ESTRESSE HIDRICO: <br>
+        Estimativa de faturamento: R$${faturamento_caso1}<br>
+        lucro estimado: R$${faturamento_caso1 - total_despesas}<br>
+        Perda monetaria: R$${ax_preco_plantado - faturamento_caso1}<br> <br>
+        CASO O CULTIVO SOFRA DE ENCHARCAMENTO:<br>
+        Estimativa de faturamento: R$${faturamento_caso2}<br>
+        Lucro estimado: R$${faturamento_caso2 - total_despesas} <br>
+        Perda monetaria: R$${ax_preco_plantado - faturamento_caso2}<br> <br>
+        COM O NOSSA GESTÃO DE MONITORAMENTO DA UMIDADE DO SOLO CAPACITIVO:
+        Estimativa de faturamento: R$${faturamento_sensor1} até R$${faturamento_sensor2}<br>
+        Economia com a agua: R$${economia_agua}<br>
+        Lucro estimado: R$${faturamento_sensor1 - total_despesas - economia_agua} até R$${faturamento_sensor2 - total_despesas - economia_agua}<br> 
+        diferença no faturamento: R$${faturamento_sensor1 - faturamento_caso1 } até R$${faturamento_sensor2 - faturamento_caso2} <br>
+        diferença no lucro: R$${(faturamento_sensor1 - total_despesas - economia_agua)-(faturamento_caso2 - total_despesas)} até R$${(faturamento_sensor2 - total_despesas)-(faturamento_caso2- total_despesas)}
+        `
+
+        
+        
+    }
+</script>
+</html>
