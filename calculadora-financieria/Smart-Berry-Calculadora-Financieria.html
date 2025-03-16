@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Financiera</title>
+</head>
+<body >
+    <img src="file:///C:/Users/jhoel/Projeto-pi/SmartBerry/Sprint-1/Logotipo/logo-sen-fundo-tamanho0.5x1.png" width="320">
+        <div>
+            <h1><b style="color: red">Simulador Financeiro</b></h1>
+            <h3> <b>Bem vindo ao Simulador Financeiro! Agora você pode visualizar como o uso de sensores de umidade do solo pode impactar diretamente as<br>
+                finanças do seu cultivo de morangos. Vamos te guiar em uma simulação simples, onde você pode inserir dados reais ou estimados 
+                de sua propriedade.</b></h3>
+        </div>
+        <div style="background-color: white;">
+            Informe a quantidade de canteiros utilizados nesta safra*: <br><input id="ipt_quant_canteiros" ><br><br>
+            Informe a quantidade de mudas de morango plantadas por canteiro*: <br><input id="ipt_quant_mudas"><br><br>
+            Informe o preço unitário de cada muda [R$]*: <br><input id="ipt_preco_muda"> <br><br>
+            informe a duração aproximada dessa safra [dias]: <br> <input id="ipt_duracao_safra" ><br><br>
+            Informe o valor que você vende o morango por quilo [R$]*: <br><input id="ipt_preco_morango" ><br><br>
+            Informe o gasto com insumos(adubo, fertilizantes, defensivos agrícolas) [mensal]*: <br> <input id="ipt_insumos" ><br><br>
+            Informe o gasto com mão de obra [mensal]*: <br><input id="ipt_mao_obra" ><br><br>
+            Informe o gasto com água com irrigação em sua plantação [mensal]*: <br><input id="ipt_agua" ><br><br>
+            Informe o gasto mensal com equipamentos  [manutenção/aluguel]*: <br><input id="ipt_equipamentos" > <br><br>
+            Informe o gasto com outros custos [mensal]: <br><input id="ipt_adicionais" ><br><br>
+            <div> <button onclick="calcular_receita_lucro()" >CALCULAR RECEITA E LUCRO TOTAL ESTIMADOS</button></div>
+        </div>
+        <div id="texto_tela"></div>
+</body>
+</html>
+<script>
+
+    function calcular_receita_lucro() {
+        // adicionando variaveis locais para armazenar as respostas do usuario utilizando  o number para identificarlo como numero
+        var quantidade_canteiros = Number(ipt_quant_canteiros.value);
+        var quantidade_mudas = Number(ipt_quant_mudas.value);
+        var preco_muda = Number(ipt_preco_muda.value)
+        var duracao_safra = Number(ipt_duracao_safra.value);
+        var preco_morango = Number(ipt_preco_morango.value);
+        var insumos = Number(ipt_insumos.value);
+        var mao_de_obra = Number(ipt_mao_obra.value);
+        var gasto_agua = Number(ipt_agua.value);
+        var equipamentos = Number(ipt_equipamentos.value);
+        var adicionais =  Number(ipt_adicionais.value);
+        // variaveis para armazenar o resultado dos calculos a serem feitos
+        // calculo do faturamento caso as mudas nao sofresem nada ou seja o potencial total de todas as mudas plantadas
+        var valor_plantado = quantidade_mudas * 0.50 * quantidade_canteiros * preco_morango; 
+        //calculo para saber o total gasto com mudas nessa safra
+        var total_preco_mudas = preco_muda * quantidade_mudas
+        // converter o valor digitado do usuario em dias para meses para fazer as contas das despesas, já que foi pedido em meses
+        var duracao_safra_mensal = duracao_safra / 31 ;
+        //calculo das despesas, multiplicando os input vezes a duração da safra em meses para saber o valor gasto na safra 
+        var total_despesas= (total_preco_mudas) + (insumos *duracao_safra_mensal)+ (mao_de_obra * duracao_safra_mensal) + (gasto_agua * duracao_safra_mensal) + (equipamentos * duracao_safra_mensal) + (adicionais * duracao_safra_mensal);
+        // calculo do faturamento caso sofra de estresse hidrico na plantação inteiro tendo em conta que ele perde 30%
+        var faturamento_estresse_hidrico = valor_plantado * 0.7; 
+        // calculo do faturamento caso sofra de estresse hidrico na plantação inteiro usando o nosso sensor tendo em conta que ele perde 15%
+        var faturamento_sensor_estresse = valor_plantado * 0.85;
+        // calculo do faturamento caso sofra de encharcamento na plantação inteiro tendo em conta que ele perde 25% 
+        var faturamento_encharcamento = valor_plantado * 0.75; 
+         // calculo do faturamento caso sofra de encharmento na plantação inteiro usando o nosso sensor tendo em conta que ele perde 10%
+        var faturamento_sensor_encharcamento = valor_plantado * 0.90;
+        // calculo da economia em dinheiro do 20% para depois so tirar do total das despesas na linha 81 e 83
+        var economia_agua = gasto_agua * 0.2;    
+        // calculando o lucro em cada situação 
+        var lucro_estresse_hidrico = faturamento_estresse_hidrico - total_despesas;
+        var lucro_sensor_estressehidrico = faturamento_sensor_estresse - total_despesas;
+        var lucro_encharcamento = faturamento_encharcamento - total_despesas;
+        var lucro_sensor_encharcamento = faturamento_sensor_encharcamento - total_despesas - economia_agua;
+        texto_tela.innerHTML  = `<br><br>
+        🌱 Quantidade de canteiros utilizadas nesta safra: ${quantidade_canteiros}<br>
+        🌿 Quantidade de mudas utilizadas no total da safra: ${quantidade_mudas}
+        <span style="color: red"><h2><b>❌ Sem nossa Gestão de Monitoramento da Umidade do Solo Capacitivo: </b></h2>
+        <b>⚠️ CASO A SAFRA SOFRA DE ESTRESSE HIDRICO: </b><br>
+        📉 Estimativa de faturamento: R$${faturamento_estresse_hidrico}<br>
+        💰 Lucro bruto estimado: R$${lucro_estresse_hidrico}<br>
+        ❌ Perda monetária no faturamento sem usar nosso sensor: -R$${faturamento_sensor_estresse - faturamento_estresse_hidrico}<br>
+        ❌ Perda monetária no lucro bruto sem usar nosso sensor: -R$${(lucro_sensor_estressehidrico)-(lucro_estresse_hidrico)}<br><br>
+        <b>⚠️ CASO O CULTIVO SOFRA DE ENCHARCAMENTO:</b><br>
+        📉 Estimativa de faturamento: R$${faturamento_encharcamento}<br>
+        💰 Lucro bruto estimado:R$${lucro_encharcamento}<br>
+        ❌ Perda monetária no faturamento sem usar nosso sensor: -R$${faturamento_sensor_encharcamento - faturamento_encharcamento}<br>
+        ❌ Perda monetária no lucro bruto sem usar nosso sensor: -$${(lucro_sensor_estressehidrico)-(lucro_encharcamento)}<br></span>
+        <span style="color: green"><h2><b>📌 Com nossa Gestão de Monitoramento da Umidade do Solo Capacitivo:</b></h2>
+            <!--Em uma plantação nem sempre a plantação inteira sofre de um outro outro, geralmente é misto, a probabilidade é muito baixa mas pode acontecer
+                esse cenario seria onde ele vai ter o menor faturamento e caso a plantação sofra do encharcamento ele terá um faturamento do 90% plantado, ou seja, o melhor cenario, 
+                então o faturamento estara entre essas duas situações, e por isso embaixo é utilizada a palavra 'até' --!>
+        🔹 Estimativa de faturamento: R$${faturamento_sensor_estresse} até R$${faturamento_sensor_encharcamento}<br>
+        💧 Economia com a agua: R$${economia_agua}<br>
+        💰 Lucro estimado: R$${lucro_sensor_estressehidrico} até R$${lucro_sensor_encharcamento}<br>
+        📈 Diferença no faturamento usando o nosso sensor: + R$${faturamento_sensor_estresse - faturamento_estresse_hidrico} até R$${faturamento_sensor_encharcamento - faturamento_encharcamento } <br>
+        📊 Diferença no lucro usando o nosso sensor: + R$${(lucro_sensor_estressehidrico)-(faturamento_estresse_hidrico - total_despesas)} até R$${(lucro_sensor_encharcamento)-(lucro_encharcamento)}</span>
+        `; 
+        }
+</script>
