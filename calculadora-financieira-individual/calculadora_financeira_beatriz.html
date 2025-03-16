@@ -41,6 +41,9 @@ Informe o gasto com a mão de obra [mensal]:
 Informe o gasto com água com irrigação em sua plantação [mensal]: 
 <input id="gasto_irrigacao"> <br>
 
+Informe a quantidade de litros gastado com a irrigação [mensal]: 
+<input id="economia"> <br> 
+
 Informe o gasto com equipamentos(manutenção/aluguel) [mensal]: 
 <input id="gasto_equipamentos"> <br>
 
@@ -67,6 +70,7 @@ Informe os gastos com outros custos adicionais:
         var ax_gasto_irrigacao = Number(gasto_irrigacao.value);
         var ax_gasto_equipamentos = Number(gasto_equipamentos.value);
         var ax_gasto_adicional = Number(gasto_adicional.value);
+        var ax_economia = Number (economia.value);
     
         var ax_preco_plantado = ax_qtd_mudas * 0.50 * ax_qtd_canteiro * ax_preco_morango;
         var ax_mudas_recomendadas = ax_comprimento_canteiro * ax_largura_canteiro / (0.2 * 0.3); //comprimento recomendado referente ao documento
@@ -76,54 +80,45 @@ Informe os gastos com outros custos adicionais:
         var faturamento_caso2 = ax_preco_plantado * 0.75; // sem o sensor no caso 2
         var faturamento_sensor1 = ax_preco_plantado * 0.85; //com sersor (15% de 30)
         var faturamento_sensor2 = ax_preco_plantado * 0.90;  //com sensor (10% de)
-        var economia_agua = ax_gasto_irrigacao * 0.2; //economia da água
-        var ax_qtd_sensores = 0;
+        var economia_agua = ax_economia * 0.2; //economia de litros com água
+        var ax_lucro_caso1 = faturamento_caso1 - total_despesas; // lucro do caso 1
+        var ax_lucro_caso2 = faturamento_caso2 - total_despesas; //lucro caso 2
+        var ax_lucro_sensor1 = faturamento_sensor1 - total_despesas; //lucro com o sensor no caso 1
+        var ax_lucro_sensor2 = faturamento_sensor2 - total_despesas - economia_agua;  //lucro com o sensro no caso 2
+
+    
+        
 
       
     
 
 
-    
-        // cálculos para ver a quantidade de sensor necessária
-        if (ax_comprimento_canteiro * ax_largura_canteiro / 2 <= 25) {
-            ax_qtd_sensores = 2
-        } else {
-            if (ax_comprimento_canteiro * ax_largura_canteiro / 2 > 25 &&  ax_comprimento_canteiro * ax_largura_canteiro / 3 <= 25) {
-                ax_qtd_sensores = 3
-            } else {
-                if (ax_comprimento_canteiro * ax_largura_canteiro / 3 > 25 &&  ax_comprimento_canteiro * ax_largura_canteiro / 4 <= 25) {
-                    ax_qtd_sensores  = 4
-                } else {
-                    if (ax_comprimento_canteiro * ax_largura_canteiro / 4 > 25 &&  ax_comprimento_canteiro * ax_largura_canteiro / 5 <= 25) {
-                        ax_qtd_sensores  = 5
-                    } else {
-                        if (comprimento_canteiro * largura_canteiro <= 0) {
-                            ax_qtd_sensores = 0
-                        } else {
-                            ax_qtd_sensores  = 6
-                        }
-                    }
-                }
-            }
-        }
         txt_mostrar.innerHTML  = 
 
-        `
-        <br> <br> SEM USAR A NOSSA GESTÃO DE MONITORAMNETO DA UMIDADE DO SOLO CAPACITIVO: <br><br>
+        `<br> 
+        Quantidade de canteiros utilizados nessa safra: ${ax_qtd_canteiro} <br> 
+        Quantidade de mudas utilizadas na safra: ${ax_qtd_mudas} <br>  <br> 
+
+        <br> <br>  SEM USAR A NOSSA GESTÃO DE MONITORAMNETO DA UMIDADE DO SOLO CAPACITIVO: <br><br>
         CASO A SAFRA SOFRA DE ESTRESSE HIDRICO: <br>
         Estimativa de faturamento: R$${faturamento_caso1}<br>
-        lucro estimado: R$${faturamento_caso1 - total_despesas}<br>
-        Perda monetaria: R$${ax_preco_plantado - faturamento_caso1}<br> <br>
+        Lucro estimado: R$${faturamento_caso1 - total_despesas}<br>
+        Perda monetária no faturamento sem usar o sensor: ${faturamento_sensor1 - faturamento_caso1} <br> 
+        Perda monetaria no lucro bruto sem o sensor : R$${ax_lucro_sensor1 - ax_lucro_caso1}<br> <br>
+
+
         CASO O CULTIVO SOFRA DE ENCHARCAMENTO:<br>
         Estimativa de faturamento: R$${faturamento_caso2}<br>
-        Lucro estimado: R$${faturamento_caso2 - total_despesas} <br>
-        Perda monetaria: R$${ax_preco_plantado - faturamento_caso2}<br> <br>
+        Lucro bruto estimado: R$${faturamento_caso2 - total_despesas} <br>
+        Perda monetária no faturamento sem usar o sensor: ${faturamento_sensor2 - faturamento_caso2} <br> 
+        Perda monetaria no lucro bruto sem o sensor : R$${ax_lucro_sensor2 - ax_lucro_caso2}<br> <br>
+
         COM O NOSSA GESTÃO DE MONITORAMENTO DA UMIDADE DO SOLO CAPACITIVO:
         Estimativa de faturamento: R$${faturamento_sensor1} até R$${faturamento_sensor2}<br>
         Economia com a agua: R$${economia_agua}<br>
-        Lucro estimado: R$${faturamento_sensor1 - total_despesas - economia_agua} até R$${faturamento_sensor2 - total_despesas - economia_agua}<br> 
-        diferença no faturamento: R$${faturamento_sensor1 - faturamento_caso1 } até R$${faturamento_sensor2 - faturamento_caso2} <br>
-        diferença no lucro: R$${(faturamento_sensor1 - total_despesas - economia_agua)-(faturamento_caso2 - total_despesas)} até R$${(faturamento_sensor2 - total_despesas)-(faturamento_caso2- total_despesas)}
+        Lucro estimado: R$${ax_lucro_sensor1} até R$${ax_lucro_sensor2}<br> 
+        Diferença no faturamento com o sensor: R$${faturamento_sensor1 - faturamento_caso1 } até R$${faturamento_sensor2 - faturamento_caso2} <br>
+        Diferença no lucro com o sensor: R$${(ax_lucro_sensor1)-(faturamento_caso1 - total_despesas)} até R$${(ax_lucro_sensor2)-(faturamento_caso2- total_despesas)}
         `
 
         
