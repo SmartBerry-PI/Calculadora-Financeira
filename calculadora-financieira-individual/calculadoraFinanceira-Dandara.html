@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Financeira - SmartBerry</title>
+</head>
+<body>
+
+    <center>
+        <img src="./image/logo.png" style="width: 200px;">
+
+        <h2>Calculadora Financeira</h2>
+        
+        <h4>Informe o número de canteiros usados:</h4> <input type="text" id="totalCanteiro">
+
+        <h4>Informe a largura do canteiro (m):</h4> <input type="text" id="larguraCanteiro">
+
+        <h4>Informe o comprimento do canteiro (m):</h4> <input type="text" id="comprimentoCanteiro">
+
+        <h4>Informe a quantidade de mudas plantadas por canteiro:</h4> <input type="text" id="mudasCanteiro">
+
+        <h4>Informe o tempo de duração da safra (dias):</h4> <input type="text" id="tempoSafra">
+
+        <h4>Informe o valor vendido do morango (R$ por kg):</h4> <input type="text" id="valorMorango">
+
+        <h4>Informe os gastos fixos mensais (R$):</h4> <input type="text" id="gastosFixos">
+
+        <br><br>
+        
+        <button onclick="calcular()">Analisar Dados</button>
+
+        <div id="divTxt"></div>
+    </center>
+
+    <script>
+        function calcular() {
+            var canteiros = Number(totalCanteiro.value);
+            var largura = Number(larguraCanteiro.value);
+            var comprimento = Number(comprimentoCanteiro.value);
+            var mudas = Number(mudasCanteiro.value);
+            var tempo = Number(tempoSafra.value);
+            var valor = Number(valorMorango.value);
+            var despesasFixas = Number(gastosFixos.value);
+            var areaTotal = canteiros * largura * comprimento;
+            var totalMudas = canteiros * mudas;
+            var producaoTotal = totalMudas * 0.50;
+            var receitaNormal = producaoTotal * valor;
+            var receitaEstresse = receitaNormal * 0.7;
+            var receitaEncharcamento = receitaNormal * 0.75;
+            var lucroNormal = receitaNormal - despesasFixas;
+            var lucroEstresse = receitaEstresse - despesasFixas;
+            var lucroEncharcamento = receitaEncharcamento - despesasFixas;
+            var perdaEstresse = receitaNormal - receitaEstresse;
+            var perdaEncharcamento = receitaNormal - receitaEncharcamento;
+
+            if (canteiros <= 0 || largura <= 0 || comprimento <= 0 || mudas <= 0 || tempo <= 0 || valor <= 0 || despesasFixas < 0) {
+            
+                alert('Por favor, preencha todos os campos corretamente.')
+            }else{
+            
+                divTxt.innerHTML = `<p>Área total cultivada: ${areaTotal} m²</p>
+                    <p>Quantidade total de mudas: ${totalMudas}</p>
+                    <p>Produção estimada: ${producaoTotal} kg</p>
+                    <p>Receita Normal: R$${receitaNormal.toFixed(2)}</p>
+                    <p>Lucro Normal: R$${lucroNormal.toFixed(2)}</p>
+                    <p>Receita com Estresse Hídrico: R$${receitaEstresse.toFixed(2)}</p>
+                    <p>Lucro com Estresse Hídrico: R$${lucroEstresse.toFixed(2)}</p>
+                    <h4 style='color: red;'>Perda devido ao Estresse Hídrico: R$${perdaEstresse.toFixed(2)}</h4>
+                    <p>Receita com Encharcamento: R$${receitaEncharcamento.toFixed(2)}</p>
+                    <p>Lucro com Encharcamento: R$${lucroEncharcamento.toFixed(2)}</p>
+                    <h4 style='color: red;'>Perda devido ao Encharcamento: R$${perdaEncharcamento.toFixed(2)}</h4>`;
+                
+            }
+        }   
+    </script>
+</body>
+</html>
