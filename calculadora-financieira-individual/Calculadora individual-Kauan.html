@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Financeira</title>
+</head>
+<body>
+    <h1>Calculadora Financeira</h1>
+    <p>Informe o faturamento e o lucro</p>
+
+    Quantidade de hectares plantados: <input id="ipt_quantidade_hectares"><br><br>
+    Quantidade de morangos (kg) por safra: <input id="ipt_quantidade_morangos"><br><br>
+    Valor do morango por kg (R$): <input id="ipt_valor_morango"><br><br>
+    Gasto com insumos: <input id="ipt_insumos"><br><br>
+    Gasto com mão de obra: <input id="ipt_mao_obra"><br><br>
+    Gasto com água para irrigação: <input id="ipt_valor_agua"><br><br>
+    Gasto com manutenção de equipamentos: <input id="ipt_manutencao"><br><br>
+    Outros adicionais: <input id="ipt_adicionais"><br><br>
+
+    <button onclick="calcular_receita()">Calcular Receita</button>
+    <div id="texto"></div>
+
+    <script>
+        function calcular_receita() {
+            var quantidade_hectares = document.querySelector("#ipt_quantidade_hectares").value;
+            var quantidade_morangos = document.querySelector("#ipt_quantidade_morangos").value;
+            var preco_morango = document.querySelector("#ipt_valor_morango").value;
+            var insumos = document.querySelector("#ipt_insumos").value;
+            var mao_de_obra = document.querySelector("#ipt_mao_obra").value;
+            var gasto_agua = document.querySelector("#ipt_valor_agua").value;
+            var manutencao = document.querySelector("#ipt_manutencao").value;
+            var adicionais = document.querySelector("#ipt_adicionais").value;
+
+            // Verificando se os campos são válidos e convertendo os valores para número
+            if (quantidade_hectares && quantidade_morangos && preco_morango && insumos && mao_de_obra && gasto_agua && manutencao && adicionais) {
+                quantidade_hectares = Number(quantidade_hectares);
+                quantidade_morangos = Number(quantidade_morangos);
+                preco_morango = Number(preco_morango);
+                insumos = Number(insumos);
+                mao_de_obra = Number(mao_de_obra);
+                gasto_agua = Number(gasto_agua);
+                manutencao = Number(manutencao);
+                adicionais = Number(adicionais);
+
+                // Calculo da receita com e sem sensores de umidade
+                var receita_com_sensores_safra = quantidade_morangos * quantidade_hectares * 1000 * preco_morango;
+                var receita_estresse_hidrico = receita_com_sensores_safra * 0.7;  // 30% de perda por estresse hídrico
+                var receita_encharcamento = receita_com_sensores_safra * 0.75;   // 25% de perda por encharcamento
+                var total_gasto = insumos + mao_de_obra + gasto_agua + manutencao + adicionais;
+
+                // Exibindo os resultados no HTML
+                document.querySelector("#texto").innerHTML = `
+                    SEM USAR O MONITORAMENTO DA UMIDADE DO SOLO:<br>
+                    Estimativa de receita com estresse hídrico: R$${receita_estresse_hidrico.toFixed(2)}<br>
+                    Perda monetária devido ao estresse hídrico: R$${(receita_com_sensores_safra - receita_estresse_hidrico).toFixed(2)}<br><br>
+                    Estimativa de receita com encharcamento: R$${receita_encharcamento.toFixed(2)}<br>
+                    Perda monetária devido ao encharcamento: R$${(receita_com_sensores_safra - receita_encharcamento).toFixed(2)}<br><br>
+                    Total de gastos: R$${total_gasto.toFixed(2)}<br>
+                    <button onclick="calcular_lucro()">Calcular Lucro Estimado</button>
+                `;
+            } else {
+                alert("Por favor, preencha todos os campos corretamente.");
+            }
+        }
+
+        function calcular_lucro() {
+            var quantidade_hectares = document.querySelector("#ipt_quantidade_hectares").value;
+            var quantidade_morangos = document.querySelector("#ipt_quantidade_morangos").value;
+            var preco_morango = document.querySelector("#ipt_valor_morango").value;
+            var insumos = document.querySelector("#ipt_insumos").value;
+            var mao_de_obra = document.querySelector("#ipt_mao_obra").value;
+            var gasto_agua = document.querySelector("#ipt_valor_agua").value;
+            var manutencao = document.querySelector("#ipt_manutencao").value;
+            var adicionais = document.querySelector("#ipt_adicionais").value;
+
+            // Verificando se os campos são válidos e convertendo os valores para número
+            if (quantidade_hectares && quantidade_morangos && preco_morango && insumos && mao_de_obra && gasto_agua && manutencao && adicionais) {
+                quantidade_hectares = Number(quantidade_hectares);
+                quantidade_morangos = Number(quantidade_morangos);
+                preco_morango = Number(preco_morango);
+                insumos = Number(insumos);
+                mao_de_obra = Number(mao_de_obra);
+                gasto_agua = Number(gasto_agua);
+                manutencao = Number(manutencao);
+                adicionais = Number(adicionais);
+
+                // Cálculo da receita com e sem sensores de umidade
+                var receita_com_sensores_safra = quantidade_morangos * quantidade_hectares * 1000 * preco_morango;
+                var total_gasto = insumos + mao_de_obra + gasto_agua + manutencao + adicionais;
+                var lucro = receita_com_sensores_safra - total_gasto;
+
+                // Exibindo o lucro estimado no HTML
+                document.querySelector("#texto").innerHTML += `
+                    Lucro estimado: R$${lucro.toFixed(2)}
+                `;
+            } else {
+                alert("Por favor, preencha todos os campos corretamente.");
+            }
+        }
+    </script>
+</body>
+</html>
