@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smartberry</title>
+</head>
+<body>
+    <h1>Smartberry - Calculadora Financeira </h1>
+    <p><b>Bem vindo! Com a nossa calculadora financeira você pode estimar seus gastos na produção morangos, mostrando o quanto você pode economizar com o uso do nosso Sensor de Umidade do Solo. Simule agora e veja a diferença no seu bolso! </b><br>
+    Faturamento com e sem sensores | Recomendação de mudas para o seu plantio | Número ideal de sensores para sua plantação | Perdas financeiras por estresse hídrico ou encharcamento | Economia de água</p>
+    <br>
+    Informe a quantidade de canteiros a serem utilizados nessa safra*: <br> <input id="iptQtdCanteiros" placeholder="Exemplo: 60"> <br><br>
+    Informe a largura desse canteiro [m]*: <br> <input id="iptLarguraCanteiro" placeholder="Exemplo: 1"> <br><br>
+    Informe o comprimento desse canteiro [m]*: <br> <input id="iptComprimentoCanteiro" placeholder="Exemplo: 50"> <br><br>
+    Informe a quantidade de mudas plantadas por canteiro*: <br> <input id="iptQtdMudasCanteiro" placeholder="Exemplo: 40"> <br><br>
+    Informe a duração aproximada dessa safra [dias]: <br> <input id="iptDuracaoSafra" placeholder="Exemplo: 90"> <br><br>
+    Informe a o valor que você vende o marango por quilo [R$]*: <br> <input id="iptValorQuiloMorango" placeholder="Exemplo: 15.00"> <br><br>
+    Informe o gasto com insumos (adubo, fertilizantes, defensivos agrícolas) [mensal]* <br> <input id="iptGastoInsumosMensal" placeholder="Exemplo: 700"> <br><br>
+    Informe o gasto com mão de obra [mensal]*: <br> <input id="iptGastoMaoDeObra" placeholder="Exemplo: 1200"> <br><br>
+    Informe o gasto com água com irrigação em sua plantação (R$) [mensal]*: <br> <input id="iptGastoAgua" placeholder="Exemplo: 1000"> <br><br>
+    Informe o quantos litros de água são gastos para a irrigação [mensal]*: <br> <input id="iptQtdLitrosMensal" placeholder="Exemplo: 20000"> <br><br>
+    Informe o gasto com equipamentos (manutenção/aluguel) [mensal]*: <br> <input id="iptGastoEquipamentosMensais" placeholder="Exemplo: 300"> <br><br>
+    Informe o gasto com outros custos operacionais*: <br> <input id="iptGastoCustoOperacional" placeholder="Exemplo: 200"> <br><br>
+    <button onclick="calculadorReceitaLucroEstimado()">CALCULAR RECEITA E LUCRO TOTAL ESTIMADOS</button> <br><br><br>
+    <div id="div_txt"></div>
+</body>
+</html>
+<script>
+    function calculadorReceitaLucroEstimado() {
+        //Atribuindo às variáveis os valores dos inputs
+        var qtdCanteiros = Number(iptQtdCanteiros.value);
+        var larguraCanteiro = Number(iptLarguraCanteiro.value);
+        var comprimentoCanteiro = Number(iptComprimentoCanteiro.value);
+        var qtdMudasCanteiro = Number(iptQtdMudasCanteiro.value);
+        var duracaoSafra = Number(iptDuracaoSafra.value);
+        var valorQuiloMorango = Number(iptValorQuiloMorango.value);
+        var gastoInsumosMensal = Number(iptGastoInsumosMensal.value);
+        var gastoMaoObraMensal = Number(iptGastoMaoDeObra.value);
+        var gastoAguaMensal = Number(iptGastoAgua.value);
+        var qtdLitrosMensal = Number(iptQtdLitrosMensal.value);
+        var gastoEquipamentosMensais = Number(iptGastoEquipamentosMensais.value);
+        var gastoCustoOperacional = Number(iptGastoCustoOperacional.value);
+        //Declarando variáveis para armazenamento de calculos
+        var areaCanteiro = 0;
+        var areaTotalPlantacao = 0;
+        var qtdMudasTotal = 0;
+        var qtdQuilosMorango = 0;
+        var faturamentoMaximo = 0;
+        var gastosFixos = gastoInsumosMensal + gastoMaoObraMensal + gastoAguaMensal + gastoEquipamentosMensais;
+        //Cálculos relacionados a área dos canteiros e plantação
+        areaCanteiro = larguraCanteiro * comprimentoCanteiro;
+        areaTotalPlantacao = areaCanteiro * qtdCanteiros;
+        qtdTotalMudas = qtdMudasCanteiro * qtdCanteiros;
+        qtdQuilosProduzidos = qtdTotalMudas * 0.50; //Quantidade de morangos produzidos por muda (no caso: meio kg = 500g)
+        //Calculando o faturamento em diferentes situações
+        faturamentoMaximo = valorQuiloMorango * qtdQuilosProduzidos;
+        faturamentoEstresseHidrico = faturamentoMaximo * 0.74; //-26% causados por Estresse hidrico
+        faturamentoEncharcamento = faturamentoMaximo * 0.73; //-27 causados por Encharcamento
+        faturamentoComSensorEstresseHidrico = faturamentoMaximo * 0.89; //11% a mais com sensor no Estresse hidrico
+        faturamentoComSensorEncharcamento = faturamentoMaximo * 0.98; //12% a mais com sensor no Encharcamento
+        //Calculando economia de água
+        economiaAgua = qtdLitrosMensal * 0.20;
+        //Convertendo a duração da safra para meses
+        duracaoSafraMensal = duracaoSafra / 30;
+        gastosFixosMensais = gastosFixos * duracaoSafraMensal; 
+        totalDespesas = gastosFixosMensais + gastoCustoOperacional; //Somando o custo operacional que é único em toda a safra, com os gastosMensais 
+        //Calculando o lucro líquido em diferentes situações
+        lucroLiquidoEstresseHidrico = faturamentoEstresseHidrico - totalDespesas;
+        lucroLiquidoEncharcamento = faturamentoEncharcamento - totalDespesas;
+        lucroLiquidoComSensorEstresseHidrico = faturamentoComSensorEstresseHidrico - totalDespesas;
+        lucroLiquidoComSensorEncharcamento = faturamentoComSensorEncharcamento - totalDespesas;
+
+        //lucroLiquido = faturamento - (gastosFixos + gastoCustoOperacional); //Total da produção menos os gastos fixos (ou seja: Lucro sem perdas);
+     
+        //Exibindo resultados da simulação
+        div_txt.innerHTML = `<b>RESULTADO DA SIMULAÇÃO</b> <br><br>
+        Área total utilizada: ${areaTotalPlantacao} m² | Quantidade total de Mudas: ${qtdTotalMudas} <br>
+        Total de Despesas: R$ ${totalDespesas}
+        <br><br>
+        <span style="color: red"> <b>SEM USAR A NOSSA SOLUÇÃO DE MONITORAMENTO DE UMIDADE DO SOLO:</b> <br><br>
+            <b>CASO A SAFRA SOFRA DE ESTRESSE HIDRICO:</b> <br>
+            Estimativa de faturamento: R$ ${faturamentoEstresseHidrico} <br>
+            Lucro estimado: R$ ${lucroLiquidoEstresseHidrico} <br>
+            Perda monetária: R$ ${faturamentoMaximo - faturamentoEstresseHidrico} <br><br><br>
+
+            <b>CASO A SAFRA SOFRA DE ENCHARCAMENTO:</b> <br>
+            Estimativa de faturamento: R$ ${faturamentoEncharcamento} <br>
+            Lucro estimado: R$ ${lucroLiquidoEncharcamento} <br>
+            Perda monetária: R$ ${faturamentoMaximo - faturamentoEncharcamento} <br><br><br>
+        </span>
+        <span style="color: green"> <b>COM A NOSSA SOLUÇÃO DE MONITORAMENTO DE UMIDADE DO SOLO:</b> <br>
+            Estimativa de faturamento: R$ ${faturamentoComSensorEstresseHidrico} até R$ ${faturamentoComSensorEncharcamento} <br>
+            Estimativa de economia com água: ${economiaAgua} litros <br>
+            
+            <b>Lucro estimado de 15%⬆: R$ ${lucroLiquidoComSensorEstresseHidrico} até R$ ${lucroLiquidoComSensorEncharcamento}</b> <br><br>       
+            <b>Observação:</b> 15%⬆ = R$ ${lucroLiquidoComSensorEstresseHidrico - lucroLiquidoEstresseHidrico} <br><br><br><br>
+            </span>
+            <i>Esse programa é apenas uma simulação de lucros, valores ao serem aplicados podem sofrer alterações na vida real</i> `;       
+    }
+</script>
